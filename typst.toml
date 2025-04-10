@@ -1,0 +1,10 @@
+[package]
+name = "trunic"
+version = "0.1.0"
+description = "Write runes from the Tunic video game"
+authors = ["Dragonink <@Dragonink>"]
+repository = "https://github.com/Dragonink/trunic.typ"
+categories = ["fun", "languages"]
+
+entrypoint = "trunic.typ"
+exclude = ["example.typ"]
