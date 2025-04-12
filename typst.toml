@@ -6,5 +6,5 @@ authors = ["Dragonink <@Dragonink>"]
 repository = "https://github.com/Dragonink/trunic.typ"
 categories = ["fun", "languages"]
 
-entrypoint = "trunic.typ"
-exclude = ["documentation.typ"]
+entrypoint = "src/lib.typ"
+exclude = ["Makefile", "docs/*"]
