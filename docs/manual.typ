@@ -1,12 +1,15 @@
 #import "/src/lib.typ" as trunic
 #import "@preview/tidy:0.4.2"
+#import "@preview/ascii-ipa:2.0.0": xsampa
 #import "@preview/gentle-clues:1.2.0"
+#import "@preview/tablex:0.0.9"
 #import "@preview/tiptoe:0.3.0"
 
 #let PACKAGE = toml("/typst.toml").package
 #let DOCS = (
-  raw-rune: tidy.parse-module(read("/src/raw-rune.typ")),
-  rune: tidy.parse-module(read("/src/rune.typ")),
+  rune-sizes: tidy.parse-module(read("/src/rune-sizes.typ")),
+  segmented-rune: tidy.parse-module(read("/src/segmented-rune.typ")),
+  syllabic-rune: tidy.parse-module(read("/src/syllabic-rune.typ")),
 )
 
 #let show-type(type) = {
@@ -65,6 +68,8 @@
       show-function-name: show-function-name,
       trunic: trunic,
       gentle-clues: gentle-clues,
+      tablex: tablex,
+      xsampa: xsampa,
     )
       + scope,
   )
@@ -205,7 +210,9 @@ This library provides functions to easily write Trunic runes in a Typst document
 #outline()
 
 
-#let rune-sizes = DOCS.raw-rune.functions.find(fn => fn.name == "rune-sizes")
+#let rune-sizes = DOCS.rune-sizes.functions.find(fn => (
+  fn.name == "rune-sizes"
+))
 = Sizes of a rune: the #show-function-name(rune-sizes) function <rune-sizes>
 
 #show-function(
@@ -265,11 +272,14 @@ This library provides functions to easily write Trunic runes in a Typst document
               stack(
                 dir: ltr,
                 spacing: SPACING,
-                trunic.raw-rune(
+                trunic.segmented-rune(
                   ..arguments(..trunic.ALL-SEGMENTS, lined: false),
                   height: SIZES.height,
                 ),
-                trunic.raw-rune(..trunic.ALL-SEGMENTS, height: SIZES.height),
+                trunic.segmented-rune(
+                  ..trunic.ALL-SEGMENTS,
+                  height: SIZES.height,
+                ),
               ),
             )
 
@@ -404,8 +414,10 @@ This library provides functions to easily write Trunic runes in a Typst document
   #show-parameter-block(rune-sizes, "width")
 ]
 
-#let raw-rune = DOCS.raw-rune.functions.find(fn => fn.name == "raw-rune")
-= Structure of a rune: the #show-function-name(raw-rune) function <raw-rune>
+#let segmented-rune = DOCS.segmented-rune.functions.find(fn => (
+  fn.name == "segmented-rune"
+))
+= Structure of a rune: the #show-function-name(segmented-rune) function <segmented-rune>
 
 #let show-lined-schemas(caption, ..runes) = {
   let runes = (
@@ -432,11 +444,11 @@ This library provides functions to easily write Trunic runes in a Typst document
       stack(
         dir: ltr,
         spacing: 1em,
-        trunic.superimpose-runes(
+        trunic.superimpose-segmented-runes(
           ..runes.map(args => arguments(..args, lined: false)),
           height: 6em,
         ),
-        trunic.superimpose-runes(
+        trunic.superimpose-segmented-runes(
           ..runes,
           (stroke: 3pt + black),
           height: 6em,
@@ -447,10 +459,10 @@ This library provides functions to easily write Trunic runes in a Typst document
 }
 
 #show-function(
-  raw-rune,
+  segmented-rune,
   scope: (
     show-lined-schemas: show-lined-schemas,
-    segments: raw-rune
+    segments: segmented-rune
       .args
       .pairs()
       .filter(((name, props)) => (
@@ -461,22 +473,22 @@ This library provides functions to easily write Trunic runes in a Typst document
   ),
 )
 
-== Vowel segments: the `vowel_*` parameters <raw-rune.vowels>
+== Vowel segments: the `vowel_*` parameters <segmented-rune.vowels>
 
 #let vowel-segments = (
-  raw-rune.args.keys().filter(name => name.starts-with("vowel_"))
+  segmented-rune.args.keys().filter(name => name.starts-with("vowel_"))
 )
 
 The vowel segments are the #vowel-segments.len() outer segments of the rune.
 
 #for segment in vowel-segments {
   block(breakable: false, width: 100%)[
-    === The #raw(segment) parameter #label("raw-rune." + segment)
+    === The #raw(segment) parameter #label("segmented-rune." + segment)
 
     #let params = (stroke: 3pt + blue)
     #params.insert(segment, true)
     #show-parameter-block(
-      raw-rune,
+      segmented-rune,
       segment,
       scope: (
         show-segment: show-lined-schemas(
@@ -488,22 +500,22 @@ The vowel segments are the #vowel-segments.len() outer segments of the rune.
   ]
 }
 
-== Consonant segments: the `consonant_*` parameters <raw-rune.consonants>
+== Consonant segments: the `consonant_*` parameters <segmented-rune.consonants>
 
 #let consonant-segments = (
-  raw-rune.args.keys().filter(name => name.starts-with("consonant_"))
+  segmented-rune.args.keys().filter(name => name.starts-with("consonant_"))
 )
 
 The consonant segments are the #consonant-segments.len() inner segments of the rune.
 
 #for segment in consonant-segments {
   block(breakable: false, width: 100%)[
-    === The #raw(segment) parameter #label("raw-rune." + segment)
+    === The #raw(segment) parameter #label("segmented-rune." + segment)
 
     #let params = (stroke: 3pt + green)
     #params.insert(segment, true)
     #show-parameter-block(
-      raw-rune,
+      segmented-rune,
       segment,
       scope: (
         show-segment: show-lined-schemas(
@@ -516,10 +528,10 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 }
 
 #block(breakable: false, width: 100%)[
-  == Inversion segment: the `invert_vowel_consonant` parameter <raw-rune.invert_vowel_consonant>
+  == Inversion segment: the `invert_vowel_consonant` parameter <segmented-rune.invert_vowel_consonant>
 
   #show-parameter-block(
-    raw-rune,
+    segmented-rune,
     "invert_vowel_consonant",
     scope: (
       show-segment: show-lined-schemas(
@@ -531,37 +543,55 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 ]
 
 #block(breakable: false)[
-  == Lined rune: the `lined` parameter <raw-rune.lined>
+  == Lined rune: the `lined` parameter <segmented-rune.lined>
 
-  #show-parameter-block(raw-rune, "lined")
+  #show-parameter-block(segmented-rune, "lined")
 ]
 
 #block(breakable: false)[
-  == Sizes of the rune: the `height` and `width` parameters <raw-rune.sizes>
+  == Sizes of the rune: the `height` and `width` parameters <segmented-rune.sizes>
 
-  #show-parameter-block(raw-rune, "height")
-  #show-parameter-block(raw-rune, "width")
+  #show-parameter-block(segmented-rune, "height")
+  #show-parameter-block(segmented-rune, "width")
 
-  Both parameters are passed down to the #show-function-name(rune-sizes) function. \
-  See its documentation in @rune-sizes for more details.
+  Both parameters are passed down to #link(<rune-sizes>)[the #show-function-name(rune-sizes) function].
 ]
 
 #block(breakable: false)[
-  == Rest parameters <raw-rune.args>
+  == Rest parameters <segmented-rune.args>
 
-  #show-parameter-block(raw-rune, "..args")
+  #show-parameter-block(segmented-rune, "..args")
 ]
 
-== Helper constants <raw-rune.consts>
+== Helper constants <segmented-rune.consts>
 
-#for var in DOCS.raw-rune.variables {
+#for var in DOCS.segmented-rune.variables {
   show-variable(var)
 }
 
-#let rune = DOCS.rune.functions.find(fn => fn.name == "rune")
-= Set of runes used in Trunic: the #show-function-name(rune) function <rune>
+#let syllabic-rune = DOCS.syllabic-rune.functions.find(fn => (
+  fn.name == "syllabic-rune"
+))
+= Set of runes used in Trunic: the #show-function-name(syllabic-rune) function <syllabic-rune>
 
-#show-function(rune)
+#show-function(syllabic-rune)
+
+== Vowel table: the `vowel` parameter <syllabic-rune.vowel>
+
+#show-parameter-block(syllabic-rune, "vowel")
+
+== Consonant table: the `consonant` parameter <syllabic-rune.consonant>
+
+#show-parameter-block(syllabic-rune, "consonant")
+
+#block(breakable: false)[
+  == Sizes of the rune: the `height` and `width` parameters <syllabic-rune.sizes>
+
+  #show-parameter-block(syllabic-rune, "height")
+  #show-parameter-block(syllabic-rune, "width")
+
+  Both parameters are passed down to #link(<segmented-rune.sizes>)[the #show-function-name(segmented-rune) function].
+]
 
 
 #counter(heading).update(0)

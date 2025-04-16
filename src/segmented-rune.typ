@@ -1,69 +1,7 @@
-/// Computes the sizes of a rune, given its #link(<rune-sizes.height>)[height] and #link(<rune-sizes.width>)[width].
-///
-/// The returned value has the following structure:
-/// #block(
-///   breakable: false,
-///   pad(left: 10pt)[
-///     #show-type("dictionary") `(` \
-///     #for name in rune-sizes().keys() [
-///       #sym.space.quad #raw(name)`:` ~#show-type("length")`,` \
-///     ]
-///     `)`
-///   ],
-/// )
-///
-/// #rune-schema
-///
-/// The `inversion_mark_diameter` and `total_height` values are computed as follows:
-/// $
-///   #raw("inversion_mark_diameter") = #raw("height") times 60% times 40% \
-///   #raw("total_height") = #raw("height") + #raw("inversion_mark_diameter")
-/// $
-///
-/// -> dictionary
-#let rune-sizes(
-  /// Height of the rune.
-  ///
-  /// ```example
-  /// The same rune with different heights: \
-  /// #raw-rune(..ALL-SEGMENTS, height: 1em)
-  /// #raw-rune(..ALL-SEGMENTS, height: 2em)
-  /// #raw-rune(..ALL-SEGMENTS, height: 3em)
-  /// ```
-  ///
-  /// -> length
-  height: 1em,
-  /// Width of the rune. \
-  /// If the value ```typc auto``` is given, the effective value will be computed as follows:
-  /// $
-  ///   #raw("width") = #raw("height") times 60%
-  /// $
-  ///
-  /// ```example
-  /// The same rune with different widths: \
-  /// #raw-rune(..ALL-SEGMENTS, width: 1em) \
-  /// #raw-rune(..ALL-SEGMENTS, width: 2em) \
-  /// #raw-rune(..ALL-SEGMENTS, width: 3em)
-  /// ```
-  ///
-  /// -> length | auto
-  width: auto,
-) = {
-  if width == auto {
-    width = height * 60%
-  }
-  let inversion_mark_diameter = height * 60% * 40%
-
-  (
-    height: height,
-    width: width,
-    inversion_mark_diameter: inversion_mark_diameter,
-    total_height: height + inversion_mark_diameter,
-  )
-}
+#import "rune-sizes.typ": rune-sizes
 
 
-/// Draws a rune by toggling each of the #segments.len() segments.
+/// Draws a rune by toggling each of its #segments.len() segments.
 ///
 /// #show-lined-schemas(
 ///   [All segments of a normal rune (left) and a lined rune (right).],
@@ -83,13 +21,13 @@
 ///
 /// #gentle-clues.example(title: "Segment colors")[
 ///   In this section,
-///   the #link(<raw-rune.vowels>)[vowel segments] are drawn in #text(blue)[*blue*],
-///   the #link(<raw-rune.consonants>)[consonant segments] in #text(green)[*green*]
-///   and the #link(<raw-rune.invert_vowel_consonant>)[inversion segment] in #text(red)[*red*].
+///   the #link(<segmented-rune.vowels>)[vowel segments] are drawn in #text(blue)[*blue*],
+///   the #link(<segmented-rune.consonants>)[consonant segments] in #text(green)[*green*]
+///   and the #link(<segmented-rune.invert_vowel_consonant>)[inversion segment] in #text(red)[*red*].
 /// ]
 ///
 /// -> content
-#let raw-rune(
+#let segmented-rune(
   /// #show-segment
   /// -> bool
   vowel_top_left: false,
@@ -129,15 +67,8 @@
   /// Enables the horizontal segment of the rune.
   ///
   /// ```example
-  /// #let segments = (
-  ///   vowel_left: true,
-  ///   vowel_bottom_left: true,
-  ///   consonant_top_right: true,
-  ///   consonant_bottom_left: true,
-  ///   consonant_bottom_right: true,
-  /// )
-  /// A normal rune: #raw-rune(..segments, lined: false) \
-  /// The same rune, but lined: #raw-rune(..segments, lined: true)
+  /// A normal rune: #segmented-rune(..ALL-SEGMENTS, lined: false) \
+  /// The same rune, but lined: #segmented-rune(..ALL-SEGMENTS, lined: true)
   /// ```
   ///
   /// -> bool
@@ -273,7 +204,7 @@
 ///
 ///
 /// ```example
-/// Draw all vowel segments: #raw-rune(..ALL-VOWEL-SEGMENTS)
+/// Draw all vowel segments: #segmented-rune(..ALL-VOWEL-SEGMENTS)
 /// ```
 ///
 /// -> arguments
@@ -286,7 +217,7 @@
 )
 
 /// ```example
-/// Draw all consonant segments: #raw-rune(..ALL-CONSONANT-SEGMENTS)
+/// Draw all consonant segments: #segmented-rune(..ALL-CONSONANT-SEGMENTS)
 /// ```
 ///
 /// -> arguments
@@ -300,7 +231,7 @@
 )
 
 /// ```example
-/// Draw all segments: #raw-rune(..ALL-SEGMENTS)
+/// Draw all segments: #segmented-rune(..ALL-SEGMENTS)
 /// ```
 ///
 /// -> arguments
@@ -312,7 +243,7 @@
 
 
 /// -> content
-#let superimpose-runes(
+#let superimpose-segmented-runes(
   /// -> arguments
   ..runes,
   /// -> length
@@ -323,7 +254,7 @@
   let SIZES = rune-sizes(height: height, width: width)
   box(height: SIZES.total_height, width: SIZES.width)[
     #for rune in runes.pos() {
-      place(raw-rune(..rune, height: height, width: width))
+      place(segmented-rune(..rune, height: height, width: width))
     }
   ]
 }
