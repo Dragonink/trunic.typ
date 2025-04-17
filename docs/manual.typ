@@ -19,6 +19,7 @@
   let colors = (
     "auto": rgb("#ffd2ca"),
     arguments: rgb("#fcdfff"),
+    array: rgb("#fcdfff"),
     bool: rgb("#ffecbf"),
     content: rgb("#a6ebe6"),
     dictionary: rgb("#fcdfff"),
@@ -36,6 +37,7 @@
   let url = (
     "auto": "foundations/auto/",
     arguments: "foundations/arguments/",
+    array: "foundations/array/",
     bool: "foundations/bool/",
     dictionary: "foundations/dictionary/",
     content: "foundations/content/",
@@ -600,15 +602,13 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
   #show-parameter-block(rune, "syllable")
 ]
 
+#let rune-word = DOCS.rune.functions.find(fn => fn.name == "rune-word")
+= Easily writing a word in Trunic: the #show-function-name(rune-word) function <rune-word>
 
-#counter(heading).update(0)
-#show outline: set heading(
-  numbering: "A.",
-  supplement: [Appendix],
-  outlined: true,
-)
+#show-function(rune-word)
 
-#outline(
-  target: figure.where(kind: "rune-schema"),
-  title: [List of Rune schemas],
-)
+#block(breakable: false)[
+  == The `syllables` parameter <rune-word.syllables>
+
+  #show-parameter-block(rune-word, "syllables")
+]

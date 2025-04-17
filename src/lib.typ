@@ -7,4 +7,4 @@
   superimpose-segmented-runes,
 )
 #import "syllabic-rune.typ": syllabic-rune, VOWELS, CONSONANTS
-#import "rune.typ": rune
+#import "rune.typ": rune, rune-word
