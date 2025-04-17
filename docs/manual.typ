@@ -554,15 +554,6 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 ]
 
 #block(breakable: false)[
-  == Sizes of the rune: the `height` and `width` parameters <segmented-rune.sizes>
-
-  #show-parameter-block(segmented-rune, "height")
-  #show-parameter-block(segmented-rune, "width")
-
-  Both parameters are passed down to the #link(<rune-sizes>)[`height` and `width` parameters of the #show-function-name(rune-sizes) function].
-]
-
-#block(breakable: false)[
   == Rest parameters <segmented-rune.rest>
 
   #show-parameter-block(segmented-rune, "..args")
@@ -598,19 +589,15 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
   )
 ]
 
-#block(breakable: false)[
-  == Sizes of the rune: the `height` and `width` parameters <syllabic-rune.sizes>
+#let rune = DOCS.rune.functions.find(fn => fn.name == "rune")
+= Easily writing a rune: the #show-function-name(rune) function <rune>
 
-  #show-parameter-block(syllabic-rune, "height")
-  #show-parameter-block(syllabic-rune, "width")
-
-  Both parameters are passed down to the #link(<segmented-rune.sizes>)[`height` and `width` parameters of the #show-function-name(segmented-rune) function].
-]
+#show-function(rune)
 
 #block(breakable: false)[
-  == Rest parameters <syllabic-rune.rest>
+  == The `syllable` parameter <rune.syllable>
 
-  #show-parameter-block(syllabic-rune, "..args")
+  #show-parameter-block(rune, "syllable")
 ]
 
 

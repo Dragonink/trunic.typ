@@ -122,7 +122,11 @@
 /// The consonant sound is defined by the pattern of the #link(<segmented-rune.consonants>)[consonant segments].
 /// The order of the sounds is defined by the presence of the #link(<syllabic-rune.invert_consonant_vowel>)[inversion mark segment].
 ///
-/// This function draws the rune by converting the given `vowel` and `consonant` to patterns of vowel segments and consonant segments respectively.
+/// This function draws the rune by converting the given `vowel` and `consonant` to patterns of vowel segments and consonant segments respectively, and giving them to the #link(<segmented-rune>)[#show-function-name("segmented-rune") function].
+///
+/// #gentle-clues.code(title: [Passed-down parameters])[
+/// The `invert_consonant_vowel`, `lined`, `height`, `width` and `..args` parameters are passed down to the #link(<segmented-rune>)[#show-function-name("segmented-rune") function].
+/// ]
 ///
 /// #gentle-clues.warning(title: [Panics])[
 ///   Panics if any of the following conditions is true:
