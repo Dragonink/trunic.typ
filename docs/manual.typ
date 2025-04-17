@@ -9,6 +9,7 @@
 
 #let PACKAGE = toml("/typst.toml").package
 #let DOCS = (
+  trunic: tidy.parse-module(read("/src/lib.typ")),
   rune-sizes: tidy.parse-module(read("/src/rune-sizes.typ")),
   segmented-rune: tidy.parse-module(read("/src/segmented-rune.typ")),
   syllabic-rune: tidy.parse-module(read("/src/syllabic-rune.typ")),
@@ -136,8 +137,11 @@
 ]
 #let show-function(fn, scope: (:)) = {
   show-parameter-list(fn)
-  trunic-eval(
-    fn.description,
+  render-examples(
+    trunic-eval(
+      fn.description,
+      scope: scope,
+    ),
     scope: scope,
   )
 }
@@ -602,13 +606,24 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
   #show-parameter-block(rune, "syllable")
 ]
 
-#let rune-word = DOCS.rune.functions.find(fn => fn.name == "rune-word")
-= Easily writing a word in Trunic: the #show-function-name(rune-word) function <rune-word>
+#let trunic-word = DOCS.trunic.functions.find(fn => fn.name == "trunic-word")
+= Easily writing a word in Trunic: the #show-function-name(trunic-word) function <trunic-word>
 
-#show-function(rune-word)
+#show-function(trunic-word)
 
 #block(breakable: false)[
-  == The `syllables` parameter <rune-word.syllables>
+  == The `syllables` parameter <trunic-word.syllables>
 
-  #show-parameter-block(rune-word, "syllables")
+  #show-parameter-block(trunic-word, "syllables")
+]
+
+#let trunic = DOCS.trunic.functions.find(fn => fn.name == "trunic")
+= Easily writing text in Trunic: the #show-function-name(trunic) function <trunic>
+
+#show-function(trunic)
+
+#block(breakable: false)[
+  == The `words` parameter <trunic-word.words>
+
+  #show-parameter-block(trunic, "words")
 ]
