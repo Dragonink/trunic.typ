@@ -1,7 +1,9 @@
 #import "rune-sizes.typ": rune-sizes
 
 
-/// Draws a rune by toggling each of its #segments.len() segments.
+/// A Trunic rune is a combination of #segments.len() optional segments.
+///
+/// This function draws the rune by enabling each segment independently.
 ///
 /// #show-lined-schemas(
 ///   [All segments of a normal rune (left) and a lined rune (right).],
@@ -14,7 +16,7 @@
 ///     stroke: 3pt + green,
 ///   ),
 ///   (
-///     invert_vowel_consonant: true,
+///     invert_consonant_vowel: true,
 ///     stroke: 3pt + red,
 ///   ),
 /// )
@@ -23,7 +25,7 @@
 ///   In this section,
 ///   the #link(<segmented-rune.vowels>)[vowel segments] are drawn in #text(blue)[*blue*],
 ///   the #link(<segmented-rune.consonants>)[consonant segments] in #text(green)[*green*]
-///   and the #link(<segmented-rune.invert_vowel_consonant>)[inversion segment] in #text(red)[*red*].
+///   and the #link(<segmented-rune.invert_consonant_vowel>)[inversion mark segment] in #text(red)[*red*].
 /// ]
 ///
 /// -> content
@@ -63,8 +65,11 @@
   consonant_bottom_right: false,
   /// #show-segment
   /// -> bool
-  invert_vowel_consonant: false,
-  /// Enables the horizontal segment of the rune.
+  invert_consonant_vowel: false,
+  /// A Trunic rune can be written in two different styles: _normal_ or _lined_.
+  ///
+  /// The _lined_ style adds an horizontal line to cut the rune in half.
+  /// This is the default style of runes in Tunic.
   ///
   /// ```example
   /// A normal rune: #segmented-rune(..ALL-SEGMENTS, lined: false) \
@@ -102,6 +107,8 @@
     height: height,
     width: width,
   )
+  set box(width: SIZES.width)
+  set circle(width: SIZES.inversion_mark_diameter)
 
   let segment_stroke = stroke(args.at("stroke", default: 0.75pt + black))
   segment_stroke = stroke((
@@ -112,10 +119,8 @@
     dash: segment_stroke.dash,
     miter-limit: segment_stroke.miter-limit,
   ))
-
-  set box(width: SIZES.width)
   set line(stroke: segment_stroke)
-  set circle(width: SIZES.inversion_mark_diameter, stroke: segment_stroke)
+  set circle(stroke: segment_stroke)
 
   box(
     baseline: SIZES.inversion_mark_diameter,
@@ -193,7 +198,7 @@
         }
       ],
       box(height: SIZES.inversion_mark_diameter)[
-        #if (invert_vowel_consonant) {
+        #if (invert_consonant_vowel) {
           align(center, circle())
         }
       ],
@@ -238,7 +243,7 @@
 #let ALL-SEGMENTS = arguments(
   ..ALL-VOWEL-SEGMENTS,
   ..ALL-CONSONANT-SEGMENTS,
-  invert_vowel_consonant: true,
+  invert_consonant_vowel: true,
 )
 
 

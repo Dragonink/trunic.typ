@@ -117,10 +117,19 @@
   ),
 )
 
-/// Draws a *valid* rune by setting the #link(<syllabic-rune.vowel>)[vowel part], the #link(<syllabic-rune.consonant>)[consonant part] and the inversion mark.
+/// A Trunic rune represents a syllable composed of a vowel sound and a consonant sound.
+/// The vowel sound is defined by the pattern of the #link(<segmented-rune.vowels>)[vowel segments].
+/// The consonant sound is defined by the pattern of the #link(<segmented-rune.consonants>)[consonant segments].
+/// The order of the sounds is defined by the presence of the #link(<syllabic-rune.invert_consonant_vowel>)[inversion mark segment].
+///
+/// This function draws the rune by converting the given `vowel` and `consonant` to patterns of vowel segments and consonant segments respectively.
 ///
 /// #gentle-clues.warning(title: [Panics])[
-///   Panics if the given `vowel` or `consonant` is unknown.
+///   Panics if any of the following conditions is true:
+///   - the given `vowel` is invalid
+///   - the given `consonant` is invalid
+///   - the `invert_consonant_vowel` flag is set, but `vowel` is ```typc none```
+///   - the `invert_consonant_vowel` flag is set, but `consonant` is ```typc none```
 /// ]
 ///
 /// -> content
@@ -147,6 +156,12 @@
   ///     .flatten()
   /// ))
   ///
+  /// ```example
+  /// The _near-open front unrounded_ vowel can be written using its IPA representation `æ` or its equivalent X-SAMPA representation `{`: \
+  /// #syllabic-rune("æ", none)
+  /// #syllabic-rune("{", none)
+  /// ```
+  ///
   /// -> str | none
   vowel,
   /// Any IPA or X-SAMPA value in the following table is accepted:
@@ -171,16 +186,32 @@
   ///     .flatten()
   /// ))
   ///
+  /// ```example
+  /// The _voiced dental fricative_ consonant can be written using its IPA representation `ð` or its equivalent X-SAMPA representation `D`: \
+  /// #syllabic-rune(none, "ð")
+  /// #syllabic-rune(none, "D")
+  /// ```
+  ///
   /// -> str | none
   consonant,
+  /// By default, the inversion mark segment is absent, i.e. this parameter is ```typc false```, the syllable is pronounced with *the consonant sound first and the vowel sound last*. \
+  /// If the inversion mark segment is present, i.e. this parameter is ```typc true```, then the syllable is pronounced with *the vowel sound first and the consonant sound last*.
+  ///
+  /// ```example
+  /// This rune is pronounced _bæ_: #syllabic-rune("æ", "b") \
+  /// This rune is pronounced _æb_: #syllabic-rune("æ", "b", invert_consonant_vowel: true)
+  /// ```
+  ///
   /// -> bool
-  invert_vowel_consonant: false,
+  invert_consonant_vowel: false,
   /// -> bool
   lined: true,
   /// -> length
   height: 1em,
   /// -> length | auto
   width: auto,
+  /// These parameters are passed down to the #link(<segmented-rune.rest>)[rest parameters of the #show-function-name("segmented-rune") function].
+  ///
   /// -> arguments
   ..args,
 ) = {
@@ -209,6 +240,8 @@
     } else {
       panic("Invalid vowel '" + vowel + "'")
     }
+  } else if invert_consonant_vowel {
+    panic("A vowel must be given if the invert_consonant_vowel flag is set")
   }
   if consonant != none {
     let consonant_def = CONSONANTS.find(def => (
@@ -221,11 +254,13 @@
     } else {
       panic("Invalid consonant '" + consonant + "'")
     }
+  } else if invert_consonant_vowel {
+    panic("A consonant must be given if the invert_consonant_vowel flag is set")
   }
 
   segmented-rune(
     ..params,
-    invert_vowel_consonant: invert_vowel_consonant,
+    invert_consonant_vowel: invert_consonant_vowel,
     lined: lined,
     height: height,
     width: width,

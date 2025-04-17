@@ -1,15 +1,18 @@
 #import "/src/lib.typ" as trunic
-#import "@preview/tidy:0.4.2"
+
 #import "@preview/ascii-ipa:2.0.0": xsampa
 #import "@preview/gentle-clues:1.2.0"
 #import "@preview/tablex:0.0.9"
+#import "@preview/tidy:0.4.2"
 #import "@preview/tiptoe:0.3.0"
+
 
 #let PACKAGE = toml("/typst.toml").package
 #let DOCS = (
   rune-sizes: tidy.parse-module(read("/src/rune-sizes.typ")),
   segmented-rune: tidy.parse-module(read("/src/segmented-rune.typ")),
   syllabic-rune: tidy.parse-module(read("/src/syllabic-rune.typ")),
+  rune: tidy.parse-module(read("/src/rune.typ")),
 )
 
 #let show-type(type) = {
@@ -150,11 +153,6 @@
   title: "Manual of " + PACKAGE.name + ".typ v" + PACKAGE.version,
   author: PACKAGE.authors.map(author => author.replace(regex("\s*<.*>"), "")),
 )
-#set heading(numbering: "I.1.")
-#show heading.where(depth: 1): self => {
-  colbreak(weak: true)
-  self
-}
 #show figure.caption: self => [
   *#self.supplement #context self.counter.display(self.numbering)#self.separator*
   #self.body
@@ -189,8 +187,12 @@
 ]
 #v(1fr)
 
-The video game Tunic (https://tunicgame.com) features a rune-like language called Trunic. \
 This library provides functions to easily write Trunic runes in a Typst document.
+
+#heading(numbering: none, outlined: false, depth: 6)[About Tunic & Trunic]
+
+The video game Tunic (https://tunicgame.com) features a rune-like language called Trunic.
+Most of the text in game is written in this language.
 
 #gentle-clues.danger(title: [Tunic spoilers])[
   *Using this library requires that you understand how Trunic works.*
@@ -200,14 +202,24 @@ This library provides functions to easily write Trunic runes in a Typst document
 
   Thus, if you want to solve the puzzle by yourself, you should avoid reading this manual and using this library.
 ]
-#gentle-clues.tip(title: [See also])[
+#gentle-clues.tip(title: [More about Trunic])[
   - Tunic Wiki's page about Trunic: https://tunic.fandom.com/wiki/Tunic_Script.
   - A graphical interface to play with Trunic runes: https://aryanpingle.github.io/Runic/
 ]
 
-#set page(numbering: "1/1")
+#heading(numbering: none, outlined: false, depth: 6)[About this manual]
 
-#outline()
+This manual details the library's API by going from "low-level" to "high-level" functions, explaining Trunic along the way.
+
+
+#set page(numbering: "1/1")
+#set heading(numbering: "I.1.")
+#show heading.where(depth: 1): self => {
+  colbreak(weak: true)
+  self
+}
+
+#outline(depth: 2)
 
 
 #let rune-sizes = DOCS.rune-sizes.functions.find(fn => (
@@ -430,7 +442,7 @@ This library provides functions to easily write Trunic runes in a Typst document
       stroke: (thickness: 1pt, paint: green, dash: "dotted"),
     ),
     arguments(
-      invert_vowel_consonant: true,
+      invert_consonant_vowel: true,
       stroke: (thickness: 1pt, paint: red, dash: "dotted"),
     ),
     ..runes.pos(),
@@ -462,14 +474,7 @@ This library provides functions to easily write Trunic runes in a Typst document
   segmented-rune,
   scope: (
     show-lined-schemas: show-lined-schemas,
-    segments: segmented-rune
-      .args
-      .pairs()
-      .filter(((name, props)) => (
-        name.starts-with("vowel_")
-          or name.starts-with("consonant_")
-          or name == "invert_vowel_consonant"
-      )),
+    segments: trunic.ALL-SEGMENTS.named(),
   ),
 )
 
@@ -528,15 +533,15 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 }
 
 #block(breakable: false, width: 100%)[
-  == Inversion segment: the `invert_vowel_consonant` parameter <segmented-rune.invert_vowel_consonant>
+  == Inversion mark segment: the `invert_consonant_vowel` parameter <segmented-rune.invert_consonant_vowel>
 
   #show-parameter-block(
     segmented-rune,
-    "invert_vowel_consonant",
+    "invert_consonant_vowel",
     scope: (
       show-segment: show-lined-schemas(
-        [The `invert_vowel_consonant` segment in a normal rune (left) and a lined rune (right).],
-        (invert_vowel_consonant: true, stroke: 3pt + red),
+        [The `invert_consonant_vowel` segment in a normal rune (left) and a lined rune (right).],
+        (invert_consonant_vowel: true, stroke: 3pt + red),
       ),
     ),
   )
@@ -554,11 +559,11 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
   #show-parameter-block(segmented-rune, "height")
   #show-parameter-block(segmented-rune, "width")
 
-  Both parameters are passed down to #link(<rune-sizes>)[the #show-function-name(rune-sizes) function].
+  Both parameters are passed down to the #link(<rune-sizes>)[`height` and `width` parameters of the #show-function-name(rune-sizes) function].
 ]
 
 #block(breakable: false)[
-  == Rest parameters <segmented-rune.args>
+  == Rest parameters <segmented-rune.rest>
 
   #show-parameter-block(segmented-rune, "..args")
 ]
@@ -572,7 +577,7 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 #let syllabic-rune = DOCS.syllabic-rune.functions.find(fn => (
   fn.name == "syllabic-rune"
 ))
-= Set of runes used in Trunic: the #show-function-name(syllabic-rune) function <syllabic-rune>
+= Composition of a rune: the #show-function-name(syllabic-rune) function <syllabic-rune>
 
 #show-function(syllabic-rune)
 
@@ -585,12 +590,27 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 #show-parameter-block(syllabic-rune, "consonant")
 
 #block(breakable: false)[
+  == Inversion mark segment: the `invert_consonant_vowel` parameter <syllabic-rune.invert_consonant_vowel>
+
+  #show-parameter-block(
+    syllabic-rune,
+    "invert_consonant_vowel",
+  )
+]
+
+#block(breakable: false)[
   == Sizes of the rune: the `height` and `width` parameters <syllabic-rune.sizes>
 
   #show-parameter-block(syllabic-rune, "height")
   #show-parameter-block(syllabic-rune, "width")
 
-  Both parameters are passed down to #link(<segmented-rune.sizes>)[the #show-function-name(segmented-rune) function].
+  Both parameters are passed down to the #link(<segmented-rune.sizes>)[`height` and `width` parameters of the #show-function-name(segmented-rune) function].
+]
+
+#block(breakable: false)[
+  == Rest parameters <syllabic-rune.rest>
+
+  #show-parameter-block(syllabic-rune, "..args")
 ]
 
 
