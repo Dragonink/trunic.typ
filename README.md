@@ -1,4 +1,4 @@
-# trunic.typ
+![Banner](docs/banner.svg)
 
 The video game *Tunic* (https://tunicgame.com) features a rune-like language called *Trunic*.
 Most of the text in game is written in this language.

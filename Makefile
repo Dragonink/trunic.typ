@@ -12,10 +12,14 @@ TYPST ?= typst
 manual: docs/manual.pdf
 
 -include docs/quick_start.d
+-include docs/banner.d
 %.d %.svg &: %.typ
 	$(TYPST) compile $< --format svg --root $(ROOT) --make-deps $*.d $(TYPSTFLAGS)
 
+docs/banner.png: docs/banner.svg
+	$(MAGICK) $< -resize 1280x640 $@
+
 .PHONY: all
-all: manual docs/quick_start.svg
+all: manual docs/quick_start.svg docs/banner.png
 
 .DEFAULT_GOAL := all
