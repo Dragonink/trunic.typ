@@ -1,6 +1,6 @@
 [package]
 name = "trunic"
-version = "0.1.0"
+version = "0.1.1"
 description = "Write runes from the Tunic video game"
 authors = ["Dragonink <@Dragonink>"]
 repository = "https://github.com/Dragonink/trunic.typ"
