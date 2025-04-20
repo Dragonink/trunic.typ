@@ -282,6 +282,7 @@
     lined: lined,
     height: height,
     width: width,
+    ..args,
   )
 }
 
