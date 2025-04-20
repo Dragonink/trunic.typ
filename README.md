@@ -21,6 +21,10 @@ TUNIC \
 ```
 ![Quick start output](docs/quick_start.svg)
 
+## Usage
+
+Read the [manual](https://github.com/Dragonink/trunic.typ/releases/latest/download/manual.pdf).
+
 ## Building from source
 
 To build this library's manual, execute:
