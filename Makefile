@@ -10,3 +10,12 @@ TYPST ?= typst
 
 .PHONY: manual
 manual: docs/manual.pdf
+
+-include docs/quick_start.d
+%.d %.svg &: %.typ
+	$(TYPST) compile $< --format svg --root $(ROOT) --make-deps $*.d $(TYPSTFLAGS)
+
+.PHONY: all
+all: manual docs/quick_start.svg
+
+.DEFAULT_GOAL := all
