@@ -117,7 +117,7 @@
   ),
 )
 
-/// A Trunic rune represents a syllable composed of a vowel sound and a consonant sound.
+/// A Trunic rune represents an English syllable composed of a vowel sound and a consonant sound.
 /// The vowel sound is defined by the pattern of the #link(<segmented-rune.vowels>)[vowel segments].
 /// The consonant sound is defined by the pattern of the #link(<segmented-rune.consonants>)[consonant segments].
 /// The order of the sounds is defined by the presence of the #link(<syllabic-rune.invert_consonant_vowel>)[inversion mark segment].
@@ -139,25 +139,32 @@
 /// -> content
 #let syllabic-rune(
   /// Any IPA or X-SAMPA value in the following table is accepted:
-  /// #columns(2, tablex.tablex(
-  ///   columns: 3,
-  ///   align: center + horizon,
-  ///   repeat-header: true,
-  ///   [*Rune (normal & lined)*], [*IPA*], [*X-SAMPA*],
-  ///   ..VOWELS
-  ///     .map(def => def.keys.enumerate().map(((i, key)) => (
-  ///       if i == 0 {
-  ///         tablex.rowspanx(def.keys.len(), stack(
-  ///           dir: ltr,
-  ///           spacing: 10pt,
-  ///           syllabic-rune(key, none, lined: false, height: 2em),
-  ///           syllabic-rune(key, none, height: 2em),
-  ///         ))
-  ///       } else { () },
-  ///       key,
-  ///       xsampa(key, reverse: true),
-  ///     )))
-  ///     .flatten()
+  /// #figure(kind: table, caption: [Vowel sounds to Trunic mapping], grid(
+  ///   columns: 2,
+  ///   gutter: 10pt,
+  ///   ..VOWELS.chunks(calc.ceil(VOWELS.len() / 2))
+  ///     .map(chunk =>
+  ///       tablex.tablex(
+  ///         columns: 3,
+  ///         align: center + horizon,
+  ///         repeat-header: true,
+  ///         [*Rune (normal & lined)*], [*IPA*], [*X-SAMPA*],
+  ///         ..chunk
+  ///           .map(def => def.keys.enumerate().map(((i, key)) => (
+  ///             if i == 0 {
+  ///               tablex.rowspanx(def.keys.len(), stack(
+  ///                 dir: ltr,
+  ///                 spacing: 10pt,
+  ///                 syllabic-rune(key, none, lined: false, height: 2em),
+  ///                 syllabic-rune(key, none, height: 2em),
+  ///               ))
+  ///             } else { () },
+  ///             key,
+  ///             xsampa(key, reverse: true),
+  ///           )))
+  ///           .flatten()
+  ///       )
+  ///     ),
   /// ))
   ///
   /// ```example
@@ -169,25 +176,32 @@
   /// -> str | none
   vowel,
   /// Any IPA or X-SAMPA value in the following table is accepted:
-  /// #columns(2, tablex.tablex(
-  ///   columns: 3,
-  ///   align: center + horizon,
-  ///   repeat-header: true,
-  ///   [*Rune (normal & lined)*], [*IPA*], [*X-SAMPA*],
-  ///   ..CONSONANTS
-  ///     .map(def => def.keys.enumerate().map(((i, key)) => (
-  ///       if i == 0 {
-  ///         tablex.rowspanx(def.keys.len(), stack(
-  ///           dir: ltr,
-  ///           spacing: 10pt,
-  ///           syllabic-rune(none, key, lined: false, height: 2em),
-  ///           syllabic-rune(none, key, height: 2em),
-  ///         ))
-  ///       } else { () },
-  ///       key,
-  ///       xsampa(key, reverse: true),
-  ///     )))
-  ///     .flatten()
+  /// #figure(kind: table, caption: [Consonant sounds to Trunic mapping], grid(
+  ///   columns: 2,
+  ///   gutter: 10pt,
+  ///   ..CONSONANTS.chunks(calc.ceil(CONSONANTS.len() / 2))
+  ///     .map(chunk =>
+  ///       tablex.tablex(
+  ///         columns: 3,
+  ///         align: center + horizon,
+  ///         repeat-header: true,
+  ///         [*Rune (normal & lined)*], [*IPA*], [*X-SAMPA*],
+  ///         ..chunk
+  ///           .map(def => def.keys.enumerate().map(((i, key)) => (
+  ///             if i == 0 {
+  ///               tablex.rowspanx(def.keys.len(), stack(
+  ///                 dir: ltr,
+  ///                 spacing: 10pt,
+  ///                 syllabic-rune(none, key, lined: false, height: 2em),
+  ///                 syllabic-rune(none, key, height: 2em),
+  ///               ))
+  ///             } else { () },
+  ///             key,
+  ///             xsampa(key, reverse: true),
+  ///           )))
+  ///           .flatten()
+  ///       )
+  ///     ),
   /// ))
   ///
   /// ```example

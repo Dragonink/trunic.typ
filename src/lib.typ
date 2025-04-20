@@ -17,7 +17,7 @@
 /// ]
 ///
 /// -> content
-#let trunic-word(
+#let word(
   /// Each given syllable is used to construct a single rune.
   ///
   /// If the type of the given `syllables` is ~#show-type("str")~,
@@ -25,8 +25,8 @@
   ///
   /// ```example
   /// TUNIC \
-  /// #trunic-word("si.k.ɹɪ.t") // SECRET
-  /// #trunic-word(("ɫɛ", "dʒɛ", "n", "d")) // LEGEND
+  /// #word("si.k.ɹɪ.t") // SECRET
+  /// #word(("ɫɛ", "dʒɛ", "n", "d")) // LEGEND
   /// ```
   ///
   /// -> str | array
@@ -48,10 +48,10 @@
   }
 }
 
-/// Writes a text in Trunic by splitting the given `words` and giving each of them to the #link(<trunic-word>)[#show-function-name("trunic-word") function].
+/// Writes a text in Trunic by splitting the given `words` and giving each of them to the #link(<word>)[#show-function-name("word") function].
 ///
 /// #gentle-clues.code(title: [Passed-down parameters])[
-/// The `lined`, `height`, `width` and `..args` parameters are passed down to the #link(<trunic-word>)[#show-function-name("trunic-word") function].
+/// The `lined`, `height`, `width` and `..args` parameters are passed down to the #link(<word>)[#show-function-name("word") function].
 /// ]
 ///
 /// -> content
@@ -81,7 +81,7 @@
   if type(words) == str {
     words = words.split(" ")
   }
-  for word in words [
-    #trunic-word(word, lined: lined, height: height, width: width, ..args)
+  for w in words [
+    #word(w, lined: lined, height: height, width: width, ..args)
   ]
 }

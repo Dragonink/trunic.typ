@@ -578,13 +578,17 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 
 #show-function(syllabic-rune)
 
-== Vowel table: the `vowel` parameter <syllabic-rune.vowel>
+#page[
+  == Vowel table: the `vowel` parameter <syllabic-rune.vowel>
 
-#show-parameter-block(syllabic-rune, "vowel")
+  #show-parameter-block(syllabic-rune, "vowel")
+]
 
-== Consonant table: the `consonant` parameter <syllabic-rune.consonant>
+#page[
+  == Consonant table: the `consonant` parameter <syllabic-rune.consonant>
 
-#show-parameter-block(syllabic-rune, "consonant")
+  #show-parameter-block(syllabic-rune, "consonant")
+]
 
 #block(breakable: false)[
   == Inversion mark segment: the `invert_consonant_vowel` parameter <syllabic-rune.invert_consonant_vowel>
@@ -606,15 +610,15 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
   #show-parameter-block(rune, "syllable")
 ]
 
-#let trunic-word = DOCS.trunic.functions.find(fn => fn.name == "trunic-word")
-= Easily writing a word in Trunic: the #show-function-name(trunic-word) function <trunic-word>
+#let word = DOCS.trunic.functions.find(fn => fn.name == "word")
+= Easily writing a word in Trunic: the #show-function-name(word) function <word>
 
-#show-function(trunic-word)
+#show-function(word)
 
 #block(breakable: false)[
-  == The `syllables` parameter <trunic-word.syllables>
+  == The `syllables` parameter <word.syllables>
 
-  #show-parameter-block(trunic-word, "syllables")
+  #show-parameter-block(word, "syllables")
 ]
 
 #let trunic = DOCS.trunic.functions.find(fn => fn.name == "trunic")
