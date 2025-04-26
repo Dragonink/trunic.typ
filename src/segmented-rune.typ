@@ -130,7 +130,7 @@
     baseline: SIZES.inversion_mark_diameter,
     stack(
       dir: ttb,
-      box(height: SIZES.height)[
+      box(height: SIZES.cap_height)[
         #let OFFSET = if (lined) { 17.5% } else { 25% }
         #let POINTS = (
           top_left: (0%, OFFSET),
@@ -261,7 +261,7 @@
   width: auto,
 ) = {
   let SIZES = rune-sizes(height: height, width: width)
-  box(height: SIZES.total_height, width: SIZES.width)[
+  box(height: SIZES.height, width: SIZES.width)[
     #for rune in runes.pos() {
       place(segmented-rune(..rune, height: height, width: width))
     }

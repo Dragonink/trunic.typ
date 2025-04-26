@@ -14,10 +14,10 @@
 ///
 /// #rune-schema
 ///
-/// The `inversion_mark_diameter` and `total_height` values are computed as follows:
+/// The `inversion_mark_diameter` and `cap_height` values are computed as follows:
 /// $
-///   #raw("inversion_mark_diameter") = #raw("height") times 60% times 40% \
-///   #raw("total_height") = #raw("height") + #raw("inversion_mark_diameter")
+///   #raw("inversion_mark_diameter") &= #raw("height") times 20% \
+///   #raw("cap_height") &= #raw("height") - #raw("inversion_mark_diameter")
 /// $
 ///
 /// -> dictionary
@@ -36,7 +36,7 @@
   /// Width of the rune. \
   /// If the value ```typc auto``` is given, the effective value will be computed as follows:
   /// $
-  ///   #raw("width") = #raw("height") times 60%
+  ///   #raw("width") = #raw("cap_height") times 60%
   /// $
   ///
   /// ```example
@@ -49,16 +49,17 @@
   /// -> length | auto
   width: auto,
 ) = {
+  let inversion_mark_diameter = height * 20%
+  let cap_height = height - inversion_mark_diameter
   if width == auto {
-    width = height * 60%
+    width = cap_height * 60%
   }
-  let inversion_mark_diameter = height * 60% * 40%
 
   (
     height: height,
     width: width,
+    cap_height: height - inversion_mark_diameter,
     inversion_mark_diameter: inversion_mark_diameter,
-    total_height: height + inversion_mark_diameter,
   )
 }
 

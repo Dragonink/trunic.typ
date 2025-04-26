@@ -2,6 +2,7 @@ MAKEFLAGS += --no-builtin-rules
 ROOT := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 TYPST ?= typst
+MAGICK ?= magick
 
 
 -include docs/manual.d

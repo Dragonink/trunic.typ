@@ -228,6 +228,8 @@ This manual details the library's API by going from "low-level" to "high-level" 
 #outline(depth: 2)
 
 
+#let RUNE_SCHEMA_HEIGHT = 8em
+
 #let rune-sizes = DOCS.rune-sizes.functions.find(fn => (
   fn.name == "rune-sizes"
 ))
@@ -237,12 +239,12 @@ This manual details the library's API by going from "low-level" to "high-level" 
   rune-sizes,
   scope: (
     rune-schema: {
-      let SIZES = trunic.rune-sizes(height: 6em)
+      let SIZES = trunic.rune-sizes(height: RUNE_SCHEMA_HEIGHT)
       let SPACING = 1em
-      let HEIGHT_X = 2 * (SIZES.width + SPACING)
-      let TOTAL_HEIGHT_X = HEIGHT_X + 2em
+      let CAP_HEIGHT_X = 2 * (SIZES.width + SPACING)
+      let HEIGHT_X = CAP_HEIGHT_X + 2em
       let INVERSION_Y = 2.5em
-      let WIDTH_Y = SIZES.total_height + 3em
+      let WIDTH_Y = SIZES.height + 3em
 
       align(
         center,
@@ -250,8 +252,8 @@ This manual details the library's API by going from "low-level" to "high-level" 
           kind: "rune-schema",
           caption: [Sizes of a normal rune (left) and a lined rune (right)],
           box(
-            height: 12em,
-            width: TOTAL_HEIGHT_X + 2em,
+            height: 12.5em,
+            width: HEIGHT_X + 2em,
           )[
             #for dx in (
               0pt,
@@ -301,34 +303,34 @@ This manual details the library's API by going from "low-level" to "high-level" 
               ),
             )
 
-            #for dy in (0pt, SIZES.height) {
+            #for dy in (0pt, SIZES.cap_height) {
               place(
                 dy: dy,
                 line(
-                  length: HEIGHT_X,
+                  length: CAP_HEIGHT_X,
                   stroke: (paint: blue, dash: "dashed"),
                 ),
               )
             }
             #place(
-              dx: HEIGHT_X,
+              dx: CAP_HEIGHT_X,
               tiptoe.line(
                 start: (0pt, 0pt),
-                end: (0pt, SIZES.height),
+                end: (0pt, SIZES.cap_height),
                 stroke: blue,
                 tip: tiptoe.straight,
                 toe: tiptoe.straight,
               ),
             )
             #place(
-              dx: HEIGHT_X - 0.75em,
-              dy: SIZES.height / 2,
-              rotate(90deg, text(blue)[`height`]),
+              dx: CAP_HEIGHT_X - 1.5em,
+              dy: SIZES.cap_height / 2,
+              rotate(90deg, text(blue)[`cap_height`]),
             )
 
             #place(
-              dy: SIZES.total_height,
-              line(length: HEIGHT_X, stroke: (paint: red, dash: "dashed")),
+              dy: SIZES.height,
+              line(length: CAP_HEIGHT_X, stroke: (paint: red, dash: "dashed")),
             )
             #for dx in (
               (SIZES.width - SIZES.inversion_mark_diameter) / 2,
@@ -342,7 +344,7 @@ This manual details the library's API by going from "low-level" to "high-level" 
             ) {
               place(
                 dx: dx,
-                dy: SIZES.height,
+                dy: SIZES.cap_height,
                 line(
                   start: (0pt, 0pt),
                   end: (0pt, INVERSION_Y),
@@ -351,8 +353,8 @@ This manual details the library's API by going from "low-level" to "high-level" 
               )
             }
             #place(
-              dx: HEIGHT_X,
-              dy: SIZES.height,
+              dx: CAP_HEIGHT_X,
+              dy: SIZES.cap_height,
               tiptoe.line(
                 start: (0pt, 0pt),
                 end: (0pt, SIZES.inversion_mark_diameter),
@@ -369,7 +371,7 @@ This manual details the library's API by going from "low-level" to "high-level" 
             ) {
               place(
                 dx: dx,
-                dy: SIZES.height + INVERSION_Y,
+                dy: SIZES.cap_height + INVERSION_Y,
                 tiptoe.line(
                   length: SIZES.inversion_mark_diameter,
                   stroke: red,
@@ -379,39 +381,34 @@ This manual details the library's API by going from "low-level" to "high-level" 
               )
             }
             #place(
-              dy: SIZES.height + INVERSION_Y + 0.5em,
+              dy: SIZES.cap_height + INVERSION_Y + 0.5em,
               box(fill: white, text(red)[`inversion_mark_diameter`]),
             )
 
+            #for dy in (0pt, SIZES.height) {
+              place(
+                dx: CAP_HEIGHT_X,
+                dy: dy,
+                line(
+                  length: HEIGHT_X - CAP_HEIGHT_X,
+                  stroke: (paint: purple, dash: "dashed"),
+                ),
+              )
+            }
             #place(
               dx: HEIGHT_X,
-              line(
-                length: TOTAL_HEIGHT_X - HEIGHT_X,
-                stroke: (paint: purple, dash: "dashed"),
-              ),
-            )
-            #place(
-              dx: HEIGHT_X,
-              dy: SIZES.total_height,
-              line(
-                length: TOTAL_HEIGHT_X - HEIGHT_X,
-                stroke: (paint: purple, dash: "dashed"),
-              ),
-            )
-            #place(
-              dx: TOTAL_HEIGHT_X,
               tiptoe.line(
                 start: (0pt, 0pt),
-                end: (0pt, SIZES.total_height),
+                end: (0pt, SIZES.height),
                 stroke: purple,
                 tip: tiptoe.straight,
                 toe: tiptoe.straight,
               ),
             )
             #place(
-              dx: TOTAL_HEIGHT_X - 2em,
-              dy: SIZES.total_height / 2,
-              rotate(90deg, text(purple)[`total_height`]),
+              dx: HEIGHT_X - 0.6em,
+              dy: SIZES.height / 2,
+              rotate(90deg, text(purple)[`height`]),
             )
           ],
         ),
@@ -464,12 +461,12 @@ This manual details the library's API by going from "low-level" to "high-level" 
         spacing: 1em,
         trunic.superimpose-segmented-runes(
           ..runes.map(args => arguments(..args, lined: false)),
-          height: 6em,
+          height: RUNE_SCHEMA_HEIGHT,
         ),
         trunic.superimpose-segmented-runes(
           ..runes,
           (stroke: 3pt + black),
-          height: 6em,
+          height: RUNE_SCHEMA_HEIGHT,
         ),
       ),
     ),
