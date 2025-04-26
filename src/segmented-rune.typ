@@ -6,7 +6,7 @@
 /// This function draws the rune by enabling each segment independently.
 ///
 /// #gentle-clues.code(title: [Passed-down parameters])[
-/// The `height` and `width` parameters are passed down to the #link(<rune-sizes>)[#show-function-name("rune-sizes") function].
+///   The `height` and `width` parameters are passed down to the #link(<rune-sizes>)[#show-function-name("rune-sizes") function].
 /// ]
 ///
 /// #show-lined-schemas(

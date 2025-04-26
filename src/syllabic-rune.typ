@@ -125,7 +125,7 @@
 /// This function draws the rune by converting the given `vowel` and `consonant` to patterns of vowel segments and consonant segments respectively, and giving them to the #link(<segmented-rune>)[#show-function-name("segmented-rune") function].
 ///
 /// #gentle-clues.code(title: [Passed-down parameters])[
-/// The `invert_consonant_vowel`, `lined`, `height`, `width` and `..args` parameters are passed down to the #link(<segmented-rune>)[#show-function-name("segmented-rune") function].
+///   The `invert_consonant_vowel`, `lined`, `height`, `width` and `..args` parameters are passed down to the #link(<segmented-rune>)[#show-function-name("segmented-rune") function].
 /// ]
 ///
 /// #gentle-clues.warning(title: [Panics])[

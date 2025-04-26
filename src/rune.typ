@@ -24,7 +24,7 @@
 /// Draws the rune by converting the given `syllable` to an argument set of `vowel`, `consonant` and `invert_consonant_vowel`, and giving them to the #link(<syllabic-rune>)[#show-function-name("syllabic-rune") function].
 ///
 /// #gentle-clues.code(title: [Passed-down parameters])[
-/// The `lined`, `height`, `width` and `..args` parameters are passed down to the #link(<syllabic-rune>)[#show-function-name("syllabic-rune") function].
+///   The `lined`, `height`, `width` and `..args` parameters are passed down to the #link(<syllabic-rune>)[#show-function-name("syllabic-rune") function].
 /// ]
 ///
 /// -> content
