@@ -9,12 +9,7 @@
 
 #let TYPST-COLOR = rgb("#239dad")
 
-#text(
-  size: 3em,
-  weight: "semibold",
-  fill: TYPST-COLOR,
-  PACKAGE.name + ".typ",
-) \
+#text(size: 3em, weight: "semibold", fill: TYPST-COLOR, PACKAGE.name + ".typ") \
 TRUNIC
 #trunic.word("taɪ.p.s.t", stroke: 3pt + TYPST-COLOR)
 #trunic.word("laɪ.b.ɹə.ɹi", stroke: 3pt)

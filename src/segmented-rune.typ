@@ -107,10 +107,7 @@
   /// -> arguments
   ..args,
 ) = {
-  let SIZES = rune-sizes(
-    height: height,
-    width: width,
-  )
+  let SIZES = rune-sizes(height: height, width: width)
   set box(width: SIZES.width)
   set circle(width: SIZES.inversion_mark_diameter)
 
@@ -126,88 +123,83 @@
   set line(stroke: segment_stroke)
   set circle(stroke: segment_stroke)
 
-  box(
-    baseline: SIZES.inversion_mark_diameter,
-    stack(
-      dir: ttb,
-      box(height: SIZES.cap_height)[
-        #let OFFSET = if (lined) { 17.5% } else { 25% }
-        #let POINTS = (
-          top_left: (0%, OFFSET),
-          top_middle: (50%, 0%),
-          top_right: (100%, OFFSET),
-          middle_left: (0%, 50%),
-          center: (50%, 50%),
-          middle_right: (100%, 50%),
-          middle_top_left: (0%, 50% + OFFSET),
-          middle_bottom_left: (0%, 50% + OFFSET),
-          center_top: if (lined) { (50%, 50% - OFFSET) } else {
-            (50%, 50%)
-          },
-          center_bottom: if (lined) { (50%, 50% + OFFSET) } else {
-            (50%, 50%)
-          },
-          bottom_left: (0%, 100% - OFFSET),
-          bottom_middle: (50%, 100%),
-          bottom_right: (100%, 100% - OFFSET),
-        )
+  box(baseline: SIZES.inversion_mark_diameter, stack(
+    dir: ttb,
+    box(height: SIZES.cap_height)[
+      #let OFFSET = if (lined) { 17.5% } else { 25% }
+      #let POINTS = (
+        top_left: (0%, OFFSET),
+        top_middle: (50%, 0%),
+        top_right: (100%, OFFSET),
+        middle_left: (0%, 50%),
+        center: (50%, 50%),
+        middle_right: (100%, 50%),
+        middle_top_left: (0%, 50% + OFFSET),
+        middle_bottom_left: (0%, 50% + OFFSET),
+        center_top: if (lined) { (50%, 50% - OFFSET) } else {
+          (50%, 50%)
+        },
+        center_bottom: if (lined) { (50%, 50% + OFFSET) } else {
+          (50%, 50%)
+        },
+        bottom_left: (0%, 100% - OFFSET),
+        bottom_middle: (50%, 100%),
+        bottom_right: (100%, 100% - OFFSET),
+      )
 
-        #if (lined) {
-          place(line(start: POINTS.middle_left, end: POINTS.middle_right))
+      #if (lined) {
+        place(line(start: POINTS.middle_left, end: POINTS.middle_right))
+      }
+      #if (vowel_top_left) {
+        place(line(start: POINTS.top_middle, end: POINTS.top_left))
+      }
+      #if (vowel_top_right) {
+        place(line(start: POINTS.top_middle, end: POINTS.top_right))
+      }
+      #if (vowel_left) {
+        if (lined) {
+          place(line(start: POINTS.top_left, end: POINTS.middle_left))
+          place(line(start: POINTS.middle_bottom_left, end: POINTS.bottom_left))
+        } else {
+          place(line(start: POINTS.top_left, end: POINTS.bottom_left))
         }
-        #if (vowel_top_left) {
-          place(line(start: POINTS.top_middle, end: POINTS.top_left))
+      }
+      #if (vowel_bottom_left) {
+        place(line(start: POINTS.bottom_middle, end: POINTS.bottom_left))
+      }
+      #if (vowel_bottom_right) {
+        place(line(start: POINTS.bottom_middle, end: POINTS.bottom_right))
+      }
+      #if (consonant_top_left) {
+        place(line(start: POINTS.center_top, end: POINTS.top_left))
+      }
+      #if (consonant_top_middle) {
+        place(line(start: POINTS.center, end: POINTS.top_middle))
+      }
+      #if (consonant_top_right) {
+        place(line(start: POINTS.center_top, end: POINTS.top_right))
+      }
+      #if (consonant_bottom_left) {
+        place(line(start: POINTS.center_bottom, end: POINTS.bottom_left))
+      }
+      #if (consonant_bottom_middle) {
+        if (lined) {
+          place(line(start: POINTS.center_top, end: POINTS.center))
+          place(line(start: POINTS.center_bottom, end: POINTS.bottom_middle))
+        } else {
+          place(line(start: POINTS.center_top, end: POINTS.bottom_middle))
         }
-        #if (vowel_top_right) {
-          place(line(start: POINTS.top_middle, end: POINTS.top_right))
-        }
-        #if (vowel_left) {
-          if (lined) {
-            place(line(start: POINTS.top_left, end: POINTS.middle_left))
-            place(
-              line(start: POINTS.middle_bottom_left, end: POINTS.bottom_left),
-            )
-          } else {
-            place(line(start: POINTS.top_left, end: POINTS.bottom_left))
-          }
-        }
-        #if (vowel_bottom_left) {
-          place(line(start: POINTS.bottom_middle, end: POINTS.bottom_left))
-        }
-        #if (vowel_bottom_right) {
-          place(line(start: POINTS.bottom_middle, end: POINTS.bottom_right))
-        }
-        #if (consonant_top_left) {
-          place(line(start: POINTS.center_top, end: POINTS.top_left))
-        }
-        #if (consonant_top_middle) {
-          place(line(start: POINTS.center, end: POINTS.top_middle))
-        }
-        #if (consonant_top_right) {
-          place(line(start: POINTS.center_top, end: POINTS.top_right))
-        }
-        #if (consonant_bottom_left) {
-          place(line(start: POINTS.center_bottom, end: POINTS.bottom_left))
-        }
-        #if (consonant_bottom_middle) {
-          if (lined) {
-            place(line(start: POINTS.center_top, end: POINTS.center))
-            place(line(start: POINTS.center_bottom, end: POINTS.bottom_middle))
-          } else {
-            place(line(start: POINTS.center_top, end: POINTS.bottom_middle))
-          }
-        }
-        #if (consonant_bottom_right) {
-          place(line(start: POINTS.center_bottom, end: POINTS.bottom_right))
-        }
-      ],
-      box(height: SIZES.inversion_mark_diameter)[
-        #if (invert_consonant_vowel) {
-          align(center, circle())
-        }
-      ],
-    ),
-  )
+      }
+      #if (consonant_bottom_right) {
+        place(line(start: POINTS.center_bottom, end: POINTS.bottom_right))
+      }
+    ],
+    box(height: SIZES.inversion_mark_diameter)[
+      #if (invert_consonant_vowel) {
+        align(center, circle())
+      }
+    ],
+  ))
 }
 
 ///

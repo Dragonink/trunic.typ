@@ -59,10 +59,8 @@
     link("https://typst.app/docs/reference/" + url.at(type), content)
   } else { content }
 }
-#let show-function-name(fn) = text(
-  fill: rgb("#4b69c6"),
-  raw(if type(fn) == str { fn } else { fn.name }),
-)
+#let show-function-name(fn) = text(fill: rgb("#4b69c6"), raw(if type(fn)
+  == str { fn } else { fn.name }))
 #let trunic-eval(source, scope: (:)) = context {
   set heading(offset: counter(heading).get().len())
 
@@ -91,67 +89,46 @@
       rows: 1,
       [
         #raw(block: true, lang: "typ", this.text)
-        #align(
-          right,
-          text(0.75em, gray)[Rendered example code #sym.arrow.r.long],
-        )
+        #align(right, text(
+          0.75em,
+          gray,
+        )[Rendered example code #sym.arrow.r.long])
       ],
-      grid.cell(
-        stroke: 1pt + gray,
-        text(
-          font: (),
-          trunic-eval(scope: scope, this.text),
-        ),
-      ),
+      grid.cell(stroke: 1pt + gray, text(font: (), trunic-eval(
+        scope: scope,
+        this.text,
+      ))),
     )
   }
 
   body
 }
-#let show-parameter-list(fn) = block(
-  breakable: false,
-  pad(left: 10pt)[
-    #show-function-name(fn)`(` \
-    #for (name, props) in fn.args {
-      [#sym.space.quad #raw(name)`:`]
-      for type in props.types [~ #show-type(type)]
-      if "default" in props [~ `=` #raw(lang: "typc", props.default)]
-      [`,` \ ]
-    }
-    `)` #sym.arrow.r ~
-    #for type in fn.return-types { show-type(type) }
-  ],
-)
+#let show-parameter-list(fn) = block(breakable: false, pad(left: 10pt)[
+  #show-function-name(fn)`(` \
+  #for (name, props) in fn.args {
+    [#sym.space.quad #raw(name)`:`]
+    for type in props.types [~ #show-type(type)]
+    if "default" in props [~ `=` #raw(lang: "typc", props.default)]
+    [`,` \ ]
+  }
+  `)` #sym.arrow.r ~
+  #for type in fn.return-types { show-type(type) }
+])
 #let show-parameter-block(fn, name, scope: (:)) = [
   #let arg = fn.args.at(name)
   The #raw(name) parameter accepts values of types ~#arg.types.map(show-type).join([, ], last: [~ or ~])~.
   #if "default" in arg [ Defaults to #raw(lang: "typc", arg.default). ]
 
-  #render-examples(
-    trunic-eval(
-      arg.description,
-      scope: scope,
-    ),
-    scope: scope,
-  )
+  #render-examples(trunic-eval(arg.description, scope: scope), scope: scope)
 ]
 #let show-function(fn, scope: (:)) = {
   show-parameter-list(fn)
-  render-examples(
-    trunic-eval(
-      fn.description,
-      scope: scope,
-    ),
-    scope: scope,
-  )
+  render-examples(trunic-eval(fn.description, scope: scope), scope: scope)
 }
 #let show-variable(var, scope: (:)) = [
   The #raw(var.name) variable is of type ~#show-type(var.type)~.
 
-  #render-examples(
-    trunic-eval(var.description, scope: scope),
-    scope: scope,
-  )
+  #render-examples(trunic-eval(var.description, scope: scope), scope: scope)
 ]
 
 
@@ -235,187 +212,133 @@ This manual details the library's API by going from "low-level" to "high-level" 
 ))
 = Sizes of a rune: the #show-function-name(rune-sizes) function <rune-sizes>
 
-#show-function(
-  rune-sizes,
-  scope: (
-    rune-schema: {
-      let SIZES = trunic.rune-sizes(height: RUNE_SCHEMA_HEIGHT)
-      let SPACING = 1em
-      let CAP_HEIGHT_X = 2 * (SIZES.width + SPACING)
-      let HEIGHT_X = CAP_HEIGHT_X + 2em
-      let INVERSION_Y = 2.5em
-      let WIDTH_Y = SIZES.height + 3em
+#show-function(rune-sizes, scope: (
+  rune-schema: {
+    let SIZES = trunic.rune-sizes(height: RUNE_SCHEMA_HEIGHT)
+    let SPACING = 1em
+    let CAP_HEIGHT_X = 2 * (SIZES.width + SPACING)
+    let HEIGHT_X = CAP_HEIGHT_X + 2em
+    let INVERSION_Y = 2.5em
+    let WIDTH_Y = SIZES.height + 3em
 
-      align(
-        center,
-        figure(
-          kind: "rune-schema",
-          caption: [Sizes of a normal rune (left) and a lined rune (right)],
-          box(
-            height: 12.5em,
-            width: HEIGHT_X + 2em,
-          )[
-            #for dx in (
-              0pt,
-              SIZES.width,
-              SIZES.width + SPACING,
-              2 * SIZES.width + SPACING,
-            ) {
-              place(
-                dx: dx,
-                line(
-                  start: (0pt, 0pt),
-                  end: (0pt, WIDTH_Y),
-                  stroke: (paint: green, dash: "dashed"),
-                ),
-              )
-            }
-            #for dx in (0pt, SIZES.width + SPACING) {
-              place(
-                dx: dx,
-                dy: WIDTH_Y,
-                tiptoe.line(
-                  length: SIZES.width,
-                  stroke: green,
-                  tip: tiptoe.straight,
-                  toe: tiptoe.straight,
-                ),
-              )
-            }
-            #place(
-              dx: SIZES.width - 7pt,
-              dy: WIDTH_Y + 6pt,
-              text(green)[`width`],
-            )
+    align(center, figure(
+      kind: "rune-schema",
+      caption: [Sizes of a normal rune (left) and a lined rune (right)],
+      box(height: 12.5em, width: HEIGHT_X + 2em)[
+        #for dx in (
+          0pt,
+          SIZES.width,
+          SIZES.width + SPACING,
+          2 * SIZES.width + SPACING,
+        ) {
+          place(dx: dx, line(start: (0pt, 0pt), end: (0pt, WIDTH_Y), stroke: (
+            paint: green,
+            dash: "dashed",
+          )))
+        }
+        #for dx in (0pt, SIZES.width + SPACING) {
+          place(dx: dx, dy: WIDTH_Y, tiptoe.line(
+            length: SIZES.width,
+            stroke: green,
+            tip: tiptoe.straight,
+            toe: tiptoe.straight,
+          ))
+        }
+        #place(dx: SIZES.width - 7pt, dy: WIDTH_Y + 6pt, text(green)[`width`])
 
-            #place(
-              stack(
-                dir: ltr,
-                spacing: SPACING,
-                trunic.segmented-rune(
-                  ..arguments(..trunic.ALL-SEGMENTS, lined: false),
-                  height: SIZES.height,
-                ),
-                trunic.segmented-rune(
-                  ..trunic.ALL-SEGMENTS,
-                  height: SIZES.height,
-                ),
-              ),
-            )
+        #place(stack(
+          dir: ltr,
+          spacing: SPACING,
+          trunic.segmented-rune(
+            ..arguments(..trunic.ALL-SEGMENTS, lined: false),
+            height: SIZES.height,
+          ),
+          trunic.segmented-rune(..trunic.ALL-SEGMENTS, height: SIZES.height),
+        ))
 
-            #for dy in (0pt, SIZES.cap_height) {
-              place(
-                dy: dy,
-                line(
-                  length: CAP_HEIGHT_X,
-                  stroke: (paint: blue, dash: "dashed"),
-                ),
-              )
-            }
-            #place(
-              dx: CAP_HEIGHT_X,
-              tiptoe.line(
-                start: (0pt, 0pt),
-                end: (0pt, SIZES.cap_height),
-                stroke: blue,
-                tip: tiptoe.straight,
-                toe: tiptoe.straight,
-              ),
-            )
-            #place(
-              dx: CAP_HEIGHT_X - 1.5em,
-              dy: SIZES.cap_height / 2,
-              rotate(90deg, text(blue)[`cap_height`]),
-            )
+        #for dy in (0pt, SIZES.cap_height) {
+          place(dy: dy, line(length: CAP_HEIGHT_X, stroke: (
+            paint: blue,
+            dash: "dashed",
+          )))
+        }
+        #place(dx: CAP_HEIGHT_X, tiptoe.line(
+          start: (0pt, 0pt),
+          end: (0pt, SIZES.cap_height),
+          stroke: blue,
+          tip: tiptoe.straight,
+          toe: tiptoe.straight,
+        ))
+        #place(dx: CAP_HEIGHT_X - 1.5em, dy: SIZES.cap_height / 2, rotate(
+          90deg,
+          text(blue)[`cap_height`],
+        ))
 
-            #place(
-              dy: SIZES.height,
-              line(length: CAP_HEIGHT_X, stroke: (paint: red, dash: "dashed")),
-            )
-            #for dx in (
-              (SIZES.width - SIZES.inversion_mark_diameter) / 2,
-              (SIZES.width + SIZES.inversion_mark_diameter) / 2,
-              SIZES.width
-                + SPACING
-                + (SIZES.width - SIZES.inversion_mark_diameter) / 2,
-              SIZES.width
-                + SPACING
-                + (SIZES.width + SIZES.inversion_mark_diameter) / 2,
-            ) {
-              place(
-                dx: dx,
-                dy: SIZES.cap_height,
-                line(
-                  start: (0pt, 0pt),
-                  end: (0pt, INVERSION_Y),
-                  stroke: (paint: red, dash: "dashed"),
-                ),
-              )
-            }
-            #place(
-              dx: CAP_HEIGHT_X,
-              dy: SIZES.cap_height,
-              tiptoe.line(
-                start: (0pt, 0pt),
-                end: (0pt, SIZES.inversion_mark_diameter),
-                stroke: red,
-                tip: tiptoe.straight,
-                toe: tiptoe.straight,
-              ),
-            )
-            #for dx in (
-              (SIZES.width - SIZES.inversion_mark_diameter) / 2,
-              SIZES.width
-                + SPACING
-                + (SIZES.width - SIZES.inversion_mark_diameter) / 2,
-            ) {
-              place(
-                dx: dx,
-                dy: SIZES.cap_height + INVERSION_Y,
-                tiptoe.line(
-                  length: SIZES.inversion_mark_diameter,
-                  stroke: red,
-                  tip: tiptoe.straight,
-                  toe: tiptoe.straight,
-                ),
-              )
-            }
-            #place(
-              dy: SIZES.cap_height + INVERSION_Y + 0.5em,
-              box(fill: white, text(red)[`inversion_mark_diameter`]),
-            )
+        #place(dy: SIZES.height, line(length: CAP_HEIGHT_X, stroke: (
+          paint: red,
+          dash: "dashed",
+        )))
+        #for dx in (
+          (SIZES.width - SIZES.inversion_mark_diameter) / 2,
+          (SIZES.width + SIZES.inversion_mark_diameter) / 2,
+          SIZES.width
+            + SPACING
+            + (SIZES.width - SIZES.inversion_mark_diameter) / 2,
+          SIZES.width
+            + SPACING
+            + (SIZES.width + SIZES.inversion_mark_diameter) / 2,
+        ) {
+          place(dx: dx, dy: SIZES.cap_height, line(
+            start: (0pt, 0pt),
+            end: (0pt, INVERSION_Y),
+            stroke: (paint: red, dash: "dashed"),
+          ))
+        }
+        #place(dx: CAP_HEIGHT_X, dy: SIZES.cap_height, tiptoe.line(
+          start: (0pt, 0pt),
+          end: (0pt, SIZES.inversion_mark_diameter),
+          stroke: red,
+          tip: tiptoe.straight,
+          toe: tiptoe.straight,
+        ))
+        #for dx in (
+          (SIZES.width - SIZES.inversion_mark_diameter) / 2,
+          SIZES.width
+            + SPACING
+            + (SIZES.width - SIZES.inversion_mark_diameter) / 2,
+        ) {
+          place(dx: dx, dy: SIZES.cap_height + INVERSION_Y, tiptoe.line(
+            length: SIZES.inversion_mark_diameter,
+            stroke: red,
+            tip: tiptoe.straight,
+            toe: tiptoe.straight,
+          ))
+        }
+        #place(dy: SIZES.cap_height + INVERSION_Y + 0.5em, box(
+          fill: white,
+          text(red)[`inversion_mark_diameter`],
+        ))
 
-            #for dy in (0pt, SIZES.height) {
-              place(
-                dx: CAP_HEIGHT_X,
-                dy: dy,
-                line(
-                  length: HEIGHT_X - CAP_HEIGHT_X,
-                  stroke: (paint: purple, dash: "dashed"),
-                ),
-              )
-            }
-            #place(
-              dx: HEIGHT_X,
-              tiptoe.line(
-                start: (0pt, 0pt),
-                end: (0pt, SIZES.height),
-                stroke: purple,
-                tip: tiptoe.straight,
-                toe: tiptoe.straight,
-              ),
-            )
-            #place(
-              dx: HEIGHT_X - 0.6em,
-              dy: SIZES.height / 2,
-              rotate(90deg, text(purple)[`height`]),
-            )
-          ],
-        ),
-      )
-    },
-  ),
-)
+        #for dy in (0pt, SIZES.height) {
+          place(dx: CAP_HEIGHT_X, dy: dy, line(
+            length: HEIGHT_X - CAP_HEIGHT_X,
+            stroke: (paint: purple, dash: "dashed"),
+          ))
+        }
+        #place(dx: HEIGHT_X, tiptoe.line(
+          start: (0pt, 0pt),
+          end: (0pt, SIZES.height),
+          stroke: purple,
+          tip: tiptoe.straight,
+          toe: tiptoe.straight,
+        ))
+        #place(dx: HEIGHT_X - 0.6em, dy: SIZES.height / 2, rotate(90deg, text(
+          purple,
+        )[`height`]))
+      ],
+    ))
+  },
+))
 
 #block(breakable: false)[
   == Height of a rune: the `height` parameter <rune-sizes.height>
@@ -436,50 +359,43 @@ This manual details the library's API by going from "low-level" to "high-level" 
 
 #let show-lined-schemas(caption, ..runes) = {
   let runes = (
-    arguments(
-      ..trunic.ALL-VOWEL-SEGMENTS,
-      stroke: (thickness: 1pt, paint: blue, dash: "dotted"),
-    ),
-    arguments(
-      ..trunic.ALL-CONSONANT-SEGMENTS,
-      stroke: (thickness: 1pt, paint: green, dash: "dotted"),
-    ),
-    arguments(
-      invert_consonant_vowel: true,
-      stroke: (thickness: 1pt, paint: red, dash: "dotted"),
-    ),
+    arguments(..trunic.ALL-VOWEL-SEGMENTS, stroke: (
+      thickness: 1pt,
+      paint: blue,
+      dash: "dotted",
+    )),
+    arguments(..trunic.ALL-CONSONANT-SEGMENTS, stroke: (
+      thickness: 1pt,
+      paint: green,
+      dash: "dotted",
+    )),
+    arguments(invert_consonant_vowel: true, stroke: (
+      thickness: 1pt,
+      paint: red,
+      dash: "dotted",
+    )),
     ..runes.pos(),
   )
 
-  align(
-    center,
-    figure(
-      kind: "rune-schema",
-      caption: caption,
-      stack(
-        dir: ltr,
-        spacing: 1em,
-        trunic.superimpose-segmented-runes(
-          ..runes.map(args => arguments(..args, lined: false)),
-          height: RUNE_SCHEMA_HEIGHT,
-        ),
-        trunic.superimpose-segmented-runes(
-          ..runes,
-          (stroke: 3pt + black),
-          height: RUNE_SCHEMA_HEIGHT,
-        ),
-      ),
+  align(center, figure(kind: "rune-schema", caption: caption, stack(
+    dir: ltr,
+    spacing: 1em,
+    trunic.superimpose-segmented-runes(
+      ..runes.map(args => arguments(..args, lined: false)),
+      height: RUNE_SCHEMA_HEIGHT,
     ),
-  )
+    trunic.superimpose-segmented-runes(
+      ..runes,
+      (stroke: 3pt + black),
+      height: RUNE_SCHEMA_HEIGHT,
+    ),
+  )))
 }
 
-#show-function(
-  segmented-rune,
-  scope: (
-    show-lined-schemas: show-lined-schemas,
-    segments: trunic.ALL-SEGMENTS.named(),
-  ),
-)
+#show-function(segmented-rune, scope: (
+  show-lined-schemas: show-lined-schemas,
+  segments: trunic.ALL-SEGMENTS.named(),
+))
 
 == Vowel segments: the `vowel_*` parameters <segmented-rune.vowels>
 
@@ -590,10 +506,7 @@ The consonant segments are the #consonant-segments.len() inner segments of the r
 #block(breakable: false)[
   == Inversion mark segment: the `invert_consonant_vowel` parameter <syllabic-rune.invert_consonant_vowel>
 
-  #show-parameter-block(
-    syllabic-rune,
-    "invert_consonant_vowel",
-  )
+  #show-parameter-block(syllabic-rune, "invert_consonant_vowel")
 ]
 
 #let rune = DOCS.rune.functions.find(fn => fn.name == "rune")

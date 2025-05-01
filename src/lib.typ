@@ -1,12 +1,12 @@
 #import "rune-sizes.typ": rune-sizes
 #import "segmented-rune.typ": (
-  segmented-rune,
-  ALL-VOWEL-SEGMENTS,
   ALL-CONSONANT-SEGMENTS,
   ALL-SEGMENTS,
+  ALL-VOWEL-SEGMENTS,
+  segmented-rune,
   superimpose-segmented-runes,
 )
-#import "syllabic-rune.typ": syllabic-rune, VOWELS, CONSONANTS
+#import "syllabic-rune.typ": CONSONANTS, VOWELS, syllabic-rune
 #import "rune.typ": rune
 
 
